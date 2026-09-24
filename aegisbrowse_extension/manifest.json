@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "AegisBrowse — NEXORA Prototype",
+  "version": "1.1.0",
+  "description": "Privacy-preserving browser agent with local sanitization, evidence inspector and guarded actions.",
+  "minimum_chrome_version": "113",
+  "permissions": ["activeTab", "scripting", "storage", "downloads", "alarms"],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
+  ],
+  "background": {
+    "service_worker": "src/service_worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "AegisBrowse",
+    "default_popup": "src/popup.html"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
