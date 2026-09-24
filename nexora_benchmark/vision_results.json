@@ -1,0 +1,412 @@
+{
+  "held_out_pages": 48,
+  "dev_pages": 12,
+  "held_out_families": [
+    "banking",
+    "health",
+    "municipal",
+    "transport"
+  ],
+  "ablation": {
+    "L1  structured (DOM+regex+checksum)": {
+      "ui": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "mean_iou": 0.0
+      },
+      "pii": {
+        "precision": 1.0,
+        "recall": 0.6847133757961783,
+        "f1": 0.8128544423440454,
+        "per_class": {
+          "LICENCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPLICATION": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PERSON": {
+            "recall": 0.7560975609756098,
+            "precision": 1.0
+          },
+          "DOB": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHOTO": {
+            "recall": 0.0,
+            "precision": 0.0
+          },
+          "ADDRESS": {
+            "recall": 0.0,
+            "precision": 0.0
+          },
+          "VEHICLE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHONE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PROPERTY_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "HEALTH_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPOINTMENT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PATIENT_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "ACCOUNT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "IFSC": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "GRIEVANCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "EMAIL": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PAN": {
+            "recall": 1.0,
+            "precision": 1.0
+          }
+        }
+      },
+      "secret": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "redaction": {
+        "precision": 1.0,
+        "recall": 0.632246075602719,
+        "f1": 0.7746945574603479,
+        "leakage": 0.36775392439728105
+      },
+      "latency": {
+        "median": 7.609406000000263,
+        "p95": 9.953298999988647,
+        "n": 75
+      },
+      "pages": 48
+    },
+    "L1+L2  + contextual heuristics": {
+      "ui": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "mean_iou": 0.0
+      },
+      "pii": {
+        "precision": 1.0,
+        "recall": 0.8375796178343949,
+        "f1": 0.9116117850953206,
+        "per_class": {
+          "LICENCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "ADDRESS": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPLICATION": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PERSON": {
+            "recall": 0.7560975609756098,
+            "precision": 1.0
+          },
+          "DOB": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHOTO": {
+            "recall": 0.0,
+            "precision": 0.0
+          },
+          "VEHICLE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHONE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PROPERTY_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "HEALTH_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPOINTMENT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PATIENT_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "ACCOUNT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "IFSC": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "GRIEVANCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "EMAIL": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PAN": {
+            "recall": 1.0,
+            "precision": 1.0
+          }
+        }
+      },
+      "secret": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "redaction": {
+        "precision": 1.0,
+        "recall": 0.7174531761944349,
+        "f1": 0.8354849915433283,
+        "leakage": 0.28254682380556506
+      },
+      "latency": {
+        "median": 7.7395739999985835,
+        "p95": 8.454942999989612,
+        "n": 75
+      },
+      "pages": 48
+    },
+    "L1+L2+L3  + visual/OCR reference": {
+      "ui": {
+        "precision": 0.9465930018416207,
+        "recall": 0.927797833935018,
+        "f1": 0.9371011850501368,
+        "mean_iou": 0.9023623574717062
+      },
+      "pii": {
+        "precision": 0.918429003021148,
+        "recall": 0.9681528662420382,
+        "f1": 0.9426356589147287,
+        "per_class": {
+          "LICENCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "ADDRESS": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPLICATION": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PERSON": {
+            "recall": 0.7560975609756098,
+            "precision": 1.0
+          },
+          "DOB": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHOTO": {
+            "recall": 1.0,
+            "precision": 0.6029411764705882
+          },
+          "VEHICLE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHONE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PROPERTY_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "HEALTH_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPOINTMENT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PATIENT_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "ACCOUNT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "IFSC": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "GRIEVANCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "EMAIL": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PAN": {
+            "recall": 1.0,
+            "precision": 1.0
+          }
+        }
+      },
+      "secret": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "redaction": {
+        "precision": 0.5587127521130639,
+        "recall": 0.9842437282996723,
+        "f1": 0.7127997829740907,
+        "leakage": 0.015756271700327673
+      },
+      "latency": {
+        "median": 417.3667789999911,
+        "p95": 610.5816419999996,
+        "n": 15
+      },
+      "pages": 48
+    },
+    "L1+L2+L3  + span-level narrowing": {
+      "ui": {
+        "precision": 0.9465930018416207,
+        "recall": 0.927797833935018,
+        "f1": 0.9371011850501368,
+        "mean_iou": 0.9023623574717062
+      },
+      "pii": {
+        "precision": 0.918429003021148,
+        "recall": 0.9681528662420382,
+        "f1": 0.9426356589147287,
+        "per_class": {
+          "LICENCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "ADDRESS": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPLICATION": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PERSON": {
+            "recall": 0.7560975609756098,
+            "precision": 1.0
+          },
+          "DOB": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHOTO": {
+            "recall": 1.0,
+            "precision": 0.6029411764705882
+          },
+          "VEHICLE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PHONE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PROPERTY_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "HEALTH_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "APPOINTMENT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PATIENT_ID": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "ACCOUNT": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "IFSC": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "GRIEVANCE": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "EMAIL": {
+            "recall": 1.0,
+            "precision": 1.0
+          },
+          "PAN": {
+            "recall": 1.0,
+            "precision": 1.0
+          }
+        }
+      },
+      "secret": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "redaction": {
+        "precision": 0.5532197092596822,
+        "recall": 0.9630576067289354,
+        "f1": 0.7027506691248377,
+        "leakage": 0.03694239327106463
+      },
+      "latency": {
+        "median": 552.2845670000152,
+        "p95": 734.8193519999882,
+        "n": 15
+      },
+      "pages": 48
+    }
+  }
+}
