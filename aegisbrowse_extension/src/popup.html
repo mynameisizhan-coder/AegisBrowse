@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AegisBrowse</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="mark">A</div>
+    <div>
+      <h1>AegisBrowse</h1>
+      <p>NEXORA · SIH26171</p>
+    </div>
+    <span class="local">LOCAL FIRST</span>
+  </header>
+
+  <main>
+    <label for="goal">Task</label>
+    <textarea id="goal" rows="3">Download my scholarship certificate</textarea>
+
+    <label for="endpoint">Planner endpoint</label>
+    <input id="endpoint" type="url" value="http://127.0.0.1:8000/plan" spellcheck="false">
+
+    <label class="checkline" for="evidence">
+      <input id="evidence" type="checkbox">
+      <span><b>Video evidence mode</b><small>Temporarily keeps compressed before/after previews on this device.</small></span>
+    </label>
+
+    <div class="actions">
+      <button id="run" class="primary">Run one safe step</button>
+      <button id="demo" class="secondary">Open demo portal</button>
+    </div>
+    <div class="actions proof-actions">
+      <button id="proof" class="secondary">View privacy proof</button>
+      <button id="serverProof" class="secondary">Server receipt</button>
+    </div>
+
+    <section id="status" class="status idle" aria-live="polite">
+      <strong>Ready</strong>
+      <span>Raw page pixels stay local.</span>
+    </section>
+
+    <section id="confirm" class="confirm hidden">
+      <strong id="confirmText">Confirmation required</strong>
+      <div class="actions">
+        <button id="allow" class="danger">Allow once</button>
+        <button id="deny" class="secondary">Deny</button>
+      </div>
+    </section>
+
+    <details>
+      <summary>Technical trace</summary>
+      <pre id="trace">No run yet.</pre>
+    </details>
+  </main>
+
+  <footer>Raw stays local → Sanitize → Minimize → Plan → Gate → Verify</footer>
+  <script src="popup.js"></script>
+</body>
+</html>

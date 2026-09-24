@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AegisBrowse Privacy Proof</title>
+  <link rel="stylesheet" href="proof.css">
+</head>
+<body>
+  <header>
+    <div><span class="eyebrow">NEXORA · SIH26171</span><h1>AegisBrowse Privacy Proof</h1></div>
+    <div class="header-actions"><span class="pill">EVIDENCE STORED LOCALLY</span><button id="clear">Clear evidence</button></div>
+  </header>
+  <main>
+    <section id="empty" class="empty hidden">
+      <h2>No evidence captured yet</h2>
+      <p>Open the extension, enable <b>Video evidence mode</b>, and run one step on the demo portal.</p>
+    </section>
+    <div id="content" class="hidden">
+      <section class="summary">
+        <div><small>Task</small><strong id="goal"></strong></div>
+        <div><small>Pipeline result</small><strong id="stage"></strong></div>
+        <div><small>Captured</small><strong id="time"></strong></div>
+        <div><small>Evidence expires</small><strong id="expires"></strong></div>
+      </section>
+
+      <section class="flow">
+        <article class="panel raw">
+          <div class="panel-head"><span>1</span><div><h2>Raw screen</h2><p>Never transmitted</p></div><b>LOCAL ONLY</b></div>
+          <div class="viewport"><img id="rawImage" alt="Raw local screen"></div>
+        </article>
+        <article class="panel safe">
+          <div class="panel-head"><span>2</span><div><h2>Locally sanitized</h2><p>PII redacted before serialization</p></div><b>ON DEVICE</b></div>
+          <div class="viewport"><img id="safeImage" alt="Locally sanitized screen"></div>
+        </article>
+        <article class="panel sent">
+          <div class="panel-head"><span>3</span><div><h2>Sent to planner</h2><p>Goal-relevant sanitized crop</p></div><b>NETWORK</b></div>
+          <div class="viewport"><img id="sentImage" alt="Exact sanitized crop sent to planner"></div>
+        </article>
+      </section>
+
+      <section class="evidence-grid">
+        <article><h3>Redaction evidence</h3><div id="tokens" class="chips"></div></article>
+        <article><h3>Disclosure evidence</h3><dl id="metrics"></dl></article>
+        <article><h3>Safe metadata sent</h3><div id="metadata"></div></article>
+      </section>
+
+      <section class="boundary">
+        <strong>Privacy boundary verified</strong>
+        <span>Only panel 3 and the safe metadata shown above were serialized for the planner request. Panel 1 remains inside the extension.</span>
+      </section>
+    </div>
+  </main>
+  <script src="proof.js"></script>
+</body>
+</html>
