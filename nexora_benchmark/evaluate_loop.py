@@ -8,7 +8,8 @@ For every held-out page:
   2. apply the redaction plan to the pixels; drop masked elements from metadata
   3. POST the sanitized PNG + safe metadata + goal to http://127.0.0.1:8000/plan
   4. check the returned action targets the page's "Download ..." control
-  5. confirm no ground-truth PII string appears anywhere in the request body
+  5. check ground-truth PII strings against textual goal/metadata only
+     (the encoded image is not checked for PII by this string test)
 
 Start the server first:  cd ../aegisbrowse_server && python -m uvicorn app:app --port 8000
     python evaluate_loop.py --dir pages_v3

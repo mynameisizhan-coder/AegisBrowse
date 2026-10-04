@@ -4,11 +4,11 @@
  * L1  structured : DOM label hints + regex + Verhoeff checksum
  * L2  contextual : entity heuristics for names/addresses in free text
  *                  (regex + stop-list; NOT a learned NER model)
- * L3  visual     : image regions from the perception model; OCR escalation
- *                  is invoked only for regions the DOM could not resolve.
+ * L3  visual     : image regions from the optional perception model.
+ *                  Browser OCR is not implemented; selective OCR is Python-only.
  *
- * Same class names, same priority order and same output shape as the Python
- * reference, so results are directly comparable.
+ * Browser and Python paths share concepts, but differ in implementation.
+ * Python benchmark scores must not be presented as browser measurements.
  */
 
 const D = [[0,1,2,3,4,5,6,7,8,9],[1,2,3,4,0,6,7,8,9,5],[2,3,4,0,1,7,8,9,5,6],

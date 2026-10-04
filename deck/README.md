@@ -12,3 +12,10 @@ Every figure on slides 4 and 5 is measured, not estimated. They come from
 `nexora_benchmark/` and are listed with reproduction commands in
 [`nexora_benchmark/SELECTIVE_RESULTS.md`](../nexora_benchmark/SELECTIVE_RESULTS.md).
 `verify_package.sh` checks that the stored results still match the deck.
+
+
+The diagrams distinguish the implemented Chrome DOM privacy path, the offline
+Python benchmark and planned ONNX/WebGPU work. The action flow represents one
+user-triggered step and a local rules planner. Full browser task timing is still
+pending. Slide 6 links the GitHub repository, the YouTube walkthrough and the
+benchmark report. Submit the PDF; keep the PPTX as the editable source.

@@ -7,6 +7,18 @@ planner, and a synthetic scholarship portal that proves the primary path:
 
 `capture → local PII/image-region redaction → goal-relevant crop → sanitized request → guarded click → verified download`
 
+## Submission and evidence
+
+- [Six-slide submission PDF](deck/NEXORA_AegisBrowse_Deck.pdf)
+- [Editable PowerPoint](deck/NEXORA_AegisBrowse_Deck.pptx)
+- [YouTube walkthrough](https://youtu.be/heZiO6_-ZtE)
+- [Fresh-set selective benchmark report](nexora_benchmark/SELECTIVE_RESULTS.md)
+
+The extension currently runs one user-triggered step with DOM privacy filtering,
+goal-based cropping and a local rules planner. The selective CV/OCR results are
+from a separate Python reference harness. They do not measure the browser
+extension, learned ONNX inference, cloud VLM reasoning or full task completion.
+
 ## What is in this package
 
 | Folder | Contents |
@@ -51,7 +63,7 @@ The planner endpoint is deliberately restricted to
 - goal matching is required for ROI inclusion—unrelated Print, Help, and Log
   out controls are not disclosed merely because they are actionable;
 - metadata is filtered to the selected visual crop and rebased afterward;
-- PII in the user's natural-language goal is replaced with typed tokens before
+- recognized structured PII in the user's natural-language goal is replaced with typed tokens before
   the network request;
 - sensitivity uses overlap, not exact rectangle equality;
 - durable confirmation state in `chrome.storage.session`, bound to tab, origin,
@@ -60,7 +72,7 @@ The planner endpoint is deliberately restricted to
 - framework-compatible input/select setters and post-write checks;
 - stale-target role/label/origin/visibility/enabled revalidation;
 - download-aware verification plus navigation, DOM, title and scroll signals;
-- strict Base64/PNG validation, request limits, bounded confidence, restricted
+- strict Base64 and PNG-signature validation, request limits, bounded confidence, restricted
   CORS and no raw-goal server logs;
 - consistent `IMAGE_REGION_n` token vocabulary and actual request byte counts.
 - consent-gated Privacy Inspector with three visual stages; compressed evidence
@@ -70,8 +82,9 @@ The planner endpoint is deliberately restricted to
 
 ## Measured results
 
-Selective escalation runs structural signals first and escalates to vision or
-OCR only where the DOM is blind. Always-on vision blurred whole content cards as
+The Python reference harness uses structural signals to skip unnecessary OCR
+and reject content containers as photos. It still runs classical visual detection.
+This selective path is not yet implemented in the browser extension. Always-on vision blurred whole content cards as
 if they were photos; selective escalation removes that over-masking. Fresh
 held-out set (48 pages, 4 portal families never used for tuning, 408 annotated
 sensitive items):
@@ -136,6 +149,38 @@ Accuracy figures reproduce exactly; timings vary with the machine.
 See `nexora_benchmark/README.md` for the dev/held-out family split and the
 honest reading of each metric (notably: these are P/R/F1 at IoU >= 0.5, **not**
 mAP, and the detector is classical CV, not a learned model).
+
+## Current benchmark and review priorities
+
+See [SELECTIVE_RESULTS.md](nexora_benchmark/SELECTIVE_RESULTS.md) for the current
+slide-4 dataset, commands and measurement boundaries. The verifier checks the
+stored evidence; it does not rerun model experiments. Run the benchmark scripts
+to reproduce accuracy and timing on your machine. Tesseract must be installed
+separately and available on PATH for OCR comparisons.
+
+The fresh synthetic set reports UI F1 0.924, PII precision/recall 1.000/0.958,
+and pixel-redaction precision/recall 1.000/0.973. The 47 ms median covers
+sanitization through a rules-planner response. The harness does not click the
+button. The 48/48 result means correct control selection, not 48 completed tasks.
+Python process RAM and CPU measurements exclude the Tesseract child process.
+
+Priorities before claiming a completed SIH solution:
+
+1. Bundle the real ONNX Runtime Web assets and a trained detector. Measure
+   held-out browser accuracy, cold/warm WebGPU/WASM latency and browser memory
+   on a lower-resource laptop as well as the current workstation.
+2. Port and validate selective OCR in the extension. Canvas/image PII is not
+   covered by the DOM fallback. The Python DOM-blind stress test reaches only
+   0.878 redaction recall.
+3. Run an open-weight VLM and complete browser tasks across varied portals.
+   Record verified task success and capture-to-completion median/p95 latency.
+   The current rules backend selects from metadata; it does not interpret pixels.
+4. Expand privacy tests for natural-language goals, multilingual names and
+   addresses, nested/iframe content and adversarial pages. Goal sanitization
+   currently covers structured regex patterns, not arbitrary free-text PII.
+5. Compare full sanitized context against task crops under identical conditions.
+   This is needed to establish the task-aware disclosure contribution beyond
+   existing privacy-filtering work. Validate Firefox separately.
 
 ## Honest implementation boundary
 

@@ -13,3 +13,6 @@ nexora_benchmark/pages_v3/
 nexora_benchmark/pages_v3_domblind/
 nexora_benchmark/panels/
 
+
+# Local baseline backups
+nexora_benchmark/_baseline_backup/

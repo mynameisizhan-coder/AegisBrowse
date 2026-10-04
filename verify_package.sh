@@ -122,4 +122,6 @@ for key, med in (("pages_v3|selective=1", 47), ("pages_v3|selective=0", 339)):
 print("benchmark: imports OK, stored results match the deck (baseline, selective, agent loop)")
 PY
 
+"$PY" tests/test_submission_evidence.py
+
 echo "PACKAGE + CORE RUNTIME CHECKS: PASS"
