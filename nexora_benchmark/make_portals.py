@@ -263,12 +263,15 @@ def main():
     ap.add_argument("--dev", type=int, default=12)
     ap.add_argument("--test", type=int, default=48)
     ap.add_argument("--out", default="pages_v2")
+    # pages_v2 uses the default 9000. A different base yields a FRESH corpus
+    # that no heuristic was ever inspected against (used for pages_v3).
+    ap.add_argument("--seed-base", type=int, default=9000)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     n = 0
     for split, count in (("dev", a.dev), ("test", a.test)):
         for i in range(count):
-            html, dom, gt, fam = build(i, 9000 + n * 31, split)
+            html, dom, gt, fam = build(i, a.seed_base + n * 31, split)
             stem = os.path.join(a.out, f"{split}_{i:03d}")
             open(stem + ".html", "w").write(html)
             json.dump({"width": W, "height": H, "family": fam, "split": split,

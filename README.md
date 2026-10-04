@@ -13,10 +13,9 @@ planner, and a synthetic scholarship portal that proves the primary path:
 |---|---|
 | `aegisbrowse_extension/` | Chrome MV3 extension — DOM extractor, privacy layers, ROI selector, action gate, verifier |
 | `aegisbrowse_server/` | FastAPI planner (rules backend runs with no model; open-weight VLM adapter available) |
-| `nexora_benchmark/` | Generators, runtime, scorer and stored results that **reproduce the slide-4 preliminary validation figures** |
-| `deck/` | The six-slide submission deck (PPTX + PDF) |
+| `nexora_benchmark/` | Generators, runtime (always-on and **selective escalation**), scorers and stored results that **reproduce every figure in the deck** |
+| `deck/` | The six-slide SIH submission deck (PDF to upload, PPTX source) |
 | `tests/`, `verify_package.sh` | Structure, import-graph, core-logic and server smoke checks |
-| `docs/` | Evaluator report and video recording guide |
 
 ## Five-minute Windows demo
 
@@ -69,6 +68,28 @@ The planner endpoint is deliberately restricted to
 - server receipt page generated from the actual last planner request;
 - the server root now redirects to the demo rather than returning Not Found.
 
+## Measured results
+
+Selective escalation runs structural signals first and escalates to vision or
+OCR only where the DOM is blind. Always-on vision blurred whole content cards as
+if they were photos; selective escalation removes that over-masking. Fresh
+held-out set (48 pages, 4 portal families never used for tuning, 408 annotated
+sensitive items):
+
+| Criterion (weight) · measure | Always-on | Selective |
+|---|---:|---:|
+| Visual context (25%) · UI F1 at IoU ≥ 0.5 | 0.924 | 0.924 |
+| PII detection (20%) · precision / recall | 0.937 / 0.955 | **1.000 / 0.958** |
+| Redaction (20%) · pixel precision / recall | 0.643 / 0.977 | **1.000 / 0.973** |
+| Resources (20%) · Python RAM / CPU per page | 57.3 MB / 52.1 ms | **56.4 MB / 25.7 ms** |
+| Latency (15%) · sanitize → plan, median / p95 | 339 / 467 ms | **47 / 48 ms** |
+| Planner picks the right control | 48 / 48 | 48 / 48 |
+
+On the original 48-page held-out set, redaction precision rises from 0.559 to
+1.000 at recall 0.979. Measured on an Intel Core Ultra 9 275HX, CPU only, with
+the rules planner. Full tables, the DOM-blind stress test and reproduction
+commands: [`nexora_benchmark/SELECTIVE_RESULTS.md`](nexora_benchmark/SELECTIVE_RESULTS.md).
+
 ## Verification
 
 Install the verification and benchmark dependencies in an isolated environment:
@@ -86,19 +107,31 @@ Linux/macOS or Git Bash:
 ./verify_package.sh
 ```
 
+The script uses `python3`, falling back to `python` (on Windows `python3` is
+often the Microsoft Store stub); set `PYTHON=/path/to/python` to override.
+
 The verifier checks the manifest and every static module dependency, parses all
 Python/JavaScript, runs core privacy/ROI tests, launches the server, and tests
 health, planning, the server receipt, malformed Base64 rejection, and the download endpoint.
 It also confirms the benchmark harness imports and that its stored results match
-the figures reported on slide 4.
+the figures in the deck: the original baseline, the selective-escalation results
+and the agent-loop timings.
 
-To reproduce the slide-4 numbers from scratch:
+Regenerating the benchmark needs Tesseract OCR and wkhtmltopdf on `PATH`
+(Debian/Ubuntu: `sudo apt install tesseract-ocr wkhtmltopdf`; Windows:
+`winget install UB-Mannheim.TesseractOCR wkhtmltopdf.wkhtmltox`). To reproduce
+the numbers from scratch:
 
 ```bash
 cd nexora_benchmark
-python3 make_portals.py --dev 12 --test 48
-python3 evaluate_vision.py --dir pages_v2
+python make_portals.py --dev 12 --test 48                                  # pages_v2
+python evaluate_vision.py --dir pages_v2                                   # original baseline
+python make_portals.py --dev 0 --test 48 --out pages_v3 --seed-base 50000   # fresh held-out set
+python make_domblind.py --src pages_v3 --out pages_v3_domblind
+python evaluate_selective.py --dir pages_v2 --dir pages_v3 --dir pages_v3_domblind
 ```
+
+Accuracy figures reproduce exactly; timings vary with the machine.
 
 See `nexora_benchmark/README.md` for the dev/held-out family split and the
 honest reading of each metric (notably: these are P/R/F1 at IoU >= 0.5, **not**
@@ -113,6 +146,11 @@ browser assets, browser OCR, and a face-specific detector are **not fabricated
 or claimed as complete**. Add the real held-out-trained assets using the READMEs
 inside `aegisbrowse_extension/models` and `src/ort` before reporting learned
 visual-context accuracy, WebGPU/WASM latency, face detection, or OCR results.
+
+**Still not measured:** a trained ONNX detector, WebGPU timing in the browser,
+and the time for a whole task to finish inside the browser. The visual layer and
+selective escalation currently run in the Python benchmark, not yet inside the
+extension.
 
 This distinction matters to an ISRO evaluator: the prototype can be run today,
 while the highest-weight learned-vision milestone remains measurable future

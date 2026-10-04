@@ -1,0 +1,118 @@
+{
+  "pages_v3|selective=1": {
+    "dir": "pages_v3",
+    "pages": 48,
+    "selective": true,
+    "planning_success": 1.0,
+    "pii_strings_in_metadata": 0,
+    "request_kb": {
+      "median": 69.5,
+      "raw_png_median": 3606.6
+    },
+    "latency_ms": {
+      "local_perceive_sanitize": {
+        "median": 22.0,
+        "p95": 28.0
+      },
+      "encode": {
+        "median": 4.1,
+        "p95": 4.2
+      },
+      "planner_round_trip": {
+        "median": 19.2,
+        "p95": 24.0
+      },
+      "total": {
+        "median": 46.7,
+        "p95": 48.1
+      }
+    }
+  },
+  "pages_v3|selective=0": {
+    "dir": "pages_v3",
+    "pages": 48,
+    "selective": false,
+    "planning_success": 1.0,
+    "pii_strings_in_metadata": 0,
+    "request_kb": {
+      "median": 71.9,
+      "raw_png_median": 3606.6
+    },
+    "latency_ms": {
+      "local_perceive_sanitize": {
+        "median": 317.0,
+        "p95": 456.3
+      },
+      "encode": {
+        "median": 4.1,
+        "p95": 5.0
+      },
+      "planner_round_trip": {
+        "median": 19.7,
+        "p95": 24.9
+      },
+      "total": {
+        "median": 339.2,
+        "p95": 467.4
+      }
+    }
+  },
+  "pages_v3_domblind|selective=1": {
+    "dir": "pages_v3_domblind",
+    "pages": 48,
+    "selective": true,
+    "planning_success": 1.0,
+    "pii_strings_in_metadata": 0,
+    "request_kb": {
+      "median": 71.3,
+      "raw_png_median": 3606.6
+    },
+    "latency_ms": {
+      "local_perceive_sanitize": {
+        "median": 94.2,
+        "p95": 249.1
+      },
+      "encode": {
+        "median": 4.0,
+        "p95": 4.3
+      },
+      "planner_round_trip": {
+        "median": 19.5,
+        "p95": 26.4
+      },
+      "total": {
+        "median": 119.5,
+        "p95": 270.3
+      }
+    }
+  },
+  "pages_v3_domblind|selective=0": {
+    "dir": "pages_v3_domblind",
+    "pages": 48,
+    "selective": false,
+    "planning_success": 1.0,
+    "pii_strings_in_metadata": 0,
+    "request_kb": {
+      "median": 76.4,
+      "raw_png_median": 3606.6
+    },
+    "latency_ms": {
+      "local_perceive_sanitize": {
+        "median": 314.6,
+        "p95": 448.7
+      },
+      "encode": {
+        "median": 4.5,
+        "p95": 5.0
+      },
+      "planner_round_trip": {
+        "median": 20.3,
+        "p95": 27.2
+      },
+      "total": {
+        "median": 342.4,
+        "p95": 468.8
+      }
+    }
+  }
+}

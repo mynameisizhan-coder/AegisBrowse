@@ -241,8 +241,14 @@ def detect_ui(img_bgr):
     return _nms(boxes)
 
 
+# Instrumentation: counts Tesseract invocations so the cost of escalation
+# can be reported per page. Never read by the pipeline itself.
+STATS = {"ocr_calls": 0}
+
+
 def ocr_words(img_bgr, box):
     """Word-level OCR boxes inside a region, for span-level redaction."""
+    STATS["ocr_calls"] += 1
     x1, y1, x2, y2 = [int(v) for v in box]
     crop = img_bgr[max(0, y1):y2, max(0, x1):x2]
     if crop.size == 0:
@@ -291,6 +297,7 @@ def span_boxes(img_bgr, region, phrase):
 
 
 def ocr(img_bgr, box):
+    STATS["ocr_calls"] += 1
     x1, y1, x2, y2 = [int(v) for v in box]
     crop = img_bgr[max(0, y1-2):y2+2, max(0, x1-2):x2+2]
     if crop.size == 0:
@@ -338,18 +345,89 @@ def narrow_spans(img_bgr, plan):
     return plan
 
 
-def run(png_path, dom, layers=("L1", "L2", "L3"), use_ocr=True, narrow=True):
-    """Returns (ui_detections, redaction_plan). Ground truth is never touched."""
+# ───────────────────────── selective escalation ─────────────────────────
+PHOTO_HINTS = ("photo", "photograph", "avatar", "profile picture", "selfie", "portrait")
+
+
+def _inside(inner, outer, slack=2):
+    return (inner[0] >= outer[0] - slack and inner[1] >= outer[1] - slack and
+            inner[2] <= outer[2] + slack and inner[3] <= outer[3] + slack)
+
+
+def _overlap_frac(a, b):
+    """Fraction of box a covered by box b."""
+    iw = max(0, min(a[2], b[2]) - max(a[0], b[0]))
+    ih = max(0, min(a[3], b[3]) - max(a[1], b[1]))
+    area = (a[2] - a[0]) * (a[3] - a[1])
+    return iw * ih / area if area else 0.0
+
+
+def layer_dom_images(dom):
+    """Structural photo signal: <img>/<canvas> whose accessible label names a
+    person photo. Unlabelled images are left to the visual layer."""
+    out = []
+    for el in dom["elements"]:
+        if el.get("tag") not in ("img", "canvas") and el.get("role") != "image":
+            continue
+        if any(h in (el.get("label") or "").lower() for h in PHOTO_HINTS):
+            out.append(dict(box=el["rect"], cls="PHOTO", mode="blur", layer="L1",
+                            src="dom-img-label"))
+    return out
+
+
+def layer_visual_selective(img_bgr, dets, dom, plan):
+    """Escalate to pixels only where the structural layers are blind.
+
+    image_region  accepted only if it is NOT a container (a photo does not
+                  hold other UI elements -- a content card does) and is not
+                  already masked structurally.
+    value_chip    OCR'd only if no DOM element with text explains it, i.e. the
+                  text is visible on screen but absent from the DOM (canvas,
+                  image-rendered text, closed shadow roots).
+    No threshold here was fitted to any dataset."""
+    masked = [p["box"] for p in plan]
+    dom_text = [e["rect"] for e in dom["elements"] if (e.get("text") or "").strip()]
+    out = []
+    for d in dets:
+        if d["cls"] == "image_region":
+            if any(o is not d and _inside(o["box"], d["box"]) for o in dets):
+                continue                                   # container, not a photo
+            if any(_overlap_frac(d["box"], m) > 0.8 for m in masked):
+                continue                                   # structural layer has it
+            out.append(dict(box=d["box"], cls="PHOTO", mode="blur",
+                            layer="L3", src="vision-image-region"))
+        elif d["cls"] == "value_chip":
+            if any(_overlap_frac(d["box"], r) > 0.5 for r in dom_text):
+                continue                                   # DOM already explains it
+            cls = classify_text(ocr(img_bgr, d["box"]))
+            if cls:
+                mode = "blackout" if cls in ("AADHAAR", "PAN", "ACCOUNT") else "token"
+                out.append(dict(box=d["box"], cls=cls, mode=mode,
+                                layer="L3", src="vision-ocr-escalated"))
+    return out
+
+
+def run(png_path, dom, layers=("L1", "L2", "L3"), use_ocr=True, narrow=True,
+        selective=False):
+    """Returns (ui_detections, redaction_plan). Ground truth is never touched.
+
+    selective=True runs structure first and escalates to OCR / visual photo
+    masking only where the DOM is blind (see layer_visual_selective)."""
     img = cv2.imread(png_path)
     dets = detect_ui(img) if "L3" in layers else []
     plan = []
     if "L1" in layers:
         plan += layer_structured(dom)
+        if selective:
+            plan += layer_dom_images(dom)
     if "L2" in layers:
         plan += layer_contextual(dom, plan)
     if "L3" in layers:
-        plan += layer_visual(img, dets, use_ocr=use_ocr)
-    if narrow and use_ocr:
+        if selective:
+            plan += layer_visual_selective(img, dets, dom, plan)
+        else:
+            plan += layer_visual(img, dets, use_ocr=use_ocr)
+    if narrow and use_ocr and not selective:
         plan = narrow_spans(img, plan)
     # de-duplicate overlapping identical-class predictions
     PRIORITY = {"PASSWORD": 0, "OTP": 0, "AADHAAR": 1, "PAN": 1, "ACCOUNT": 1,

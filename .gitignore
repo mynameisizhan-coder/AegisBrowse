@@ -9,5 +9,7 @@ Thumbs.db
 # Generated benchmark fixtures and visualizations
 nexora_benchmark/pages/
 nexora_benchmark/pages_v2/
+nexora_benchmark/pages_v3/
+nexora_benchmark/pages_v3_domblind/
 nexora_benchmark/panels/
 
